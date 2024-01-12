@@ -1,6 +1,9 @@
 # aws-sam-learning
 learning aws sam
 
+# Running
+`sam build`
+`sam deploy --guided` (supply your email when it asks to recieve a password for the API)
 
 # commands
 `sam validate` validate sam

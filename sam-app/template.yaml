@@ -14,6 +14,8 @@ Globals:
     # You can add LoggingConfig parameters such as the Logformat, Log Group, and SystemLogLevel or ApplicationLogLevel. Learn more here https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html#sam-function-loggingconfig.
     LoggingConfig:
       LogFormat: JSON
+
+
 Resources:
   HelloWorldFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -29,6 +31,51 @@ Resources:
           Properties:
             Path: /hello
             Method: get
+            Auth:
+              Authorizers: CognitoAuthorizer
+
+  # for UserPool & Cognito I have been referring to this https://scriptingis.life/Cognito-AWS-SAM/
+
+  # in this example we have aws store the username & password themselfs,
+  # but there are options to authenticate with SAML or social platforms.
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: MyUserPool
+      UsernameAttributes:
+        - email
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+      Schema:
+        - AttributeDataType: String
+          Name: email
+          Required: false
+
+  # in this flow the username & password is supplied, this should not be used for prod
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      UserPoolId: !Ref UserPool
+      GenerateSecret: false
+      ExplicitAuthFlows:
+        - ALLOW_USER_PASSWORD_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+
+  # create an initial user from the email we supply in the variables.
+  # they will receive a temporary password via email.
+  UserPoolUser:
+    Type: AWS::Cognito::UserPoolUser
+    Properties:
+      DesiredDeliveryMediums:
+        - EMAIL
+      Username: !Ref CognitoUserEmail
+      UserPoolId: !Ref UserPool
+    
+Parameters:
+  CognitoUserEmail:
+    Description: Email address of the created user
+    Type: String
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function

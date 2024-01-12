@@ -37,7 +37,7 @@ def lambda_handler(event, context):
         "statusCode": 200,
         "body": json.dumps(
             {
-                "message": "hello world, i'm coming from a lambda!",
+                "message": "hello world, i'm coming from a lambda! i have been synced!!!",
                 # "location": ip.text.replace("\n", "")
             }
         ),
