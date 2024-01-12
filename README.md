@@ -6,3 +6,4 @@ learning aws sam
 `sam build` to build locally
 `sam build --use-container` to build locally in a container
 `sam local invoke` to invoke an instance and get a response
+`sam deploy --guided` deploy (with guide)
