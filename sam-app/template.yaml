@@ -17,6 +17,21 @@ Globals:
 
 
 Resources:
+
+  # the serverless function creates the api gateway implicitly,
+  # to setup auth we have to explicitly define it here.
+  HelloWorldAPIGateway:
+    # DependsOn: UserPool
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: sam-app
+      StageName: !Ref APIStageName
+      Cors: "'*'"
+      Auth:
+        Authorizers:
+          CognitoAuthorizer:
+            UserPoolArn: !GetAtt "UserPool.Arn"
+
   HelloWorldFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -75,6 +90,10 @@ Resources:
 Parameters:
   CognitoUserEmail:
     Description: Email address of the created user
+    Type: String
+  APIStageName:
+    Default: api
+    Description: StageName of API Gateway deployment (this is the base path?)
     Type: String
 
 Outputs:
