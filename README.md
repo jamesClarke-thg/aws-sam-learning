@@ -9,4 +9,4 @@ learning aws sam
 `sam deploy --guided` deploy (with guide)
 `sam list endpoints --region us-east-1 --output json` to get the endpoints
 `sam remote invoke HelloWorldFunction --region us-east-1 --stack-name sam-app` invoke the function in the cloud
-`sam sync --watch` sync any local changes to the cloud (deploys local changes in real-time so only do it for development environments)
+`sam sync --watch --region us-east-1` sync any local changes to the cloud (deploys local changes in real-time so only do it for development environments)
